@@ -30,23 +30,24 @@ export default {
   name: "HomeView",
   data() {
     return {
-      floor: 5,
-      elevatorFloors: [],
-      elevatorButtons: [],
-      floorHeight: "",
-      cabinIndex: 1,
-      direction: null,
-      targetFloor: null,
+      floor: 5, // кол-во этажей
+      elevatorFloors: [], // список этажей
+      elevatorButtons: [], // список кнопок
+      floorHeight: "", // высота 1 этажа
+      cabinIndex: 1, // этаж на котором находится кабина
+      direction: null, // направление движения
+      targetFloor: null, // целевой этаж на который надо ехать
     };
   },
 
   created() {
-    this.elevatorFloors = Array.from({ length: this.floor + 1 });
-    this.elevatorButtons = Array.from({ length: this.floor });
-    this.floorHeight = 100 / this.floor;
+    this.elevatorFloors = Array.from({ length: this.floor + 1 }); //генерируем список этажей после создания страницы
+    this.elevatorButtons = Array.from({ length: this.floor }); //генерируем список кнопок после создания страницы
+    this.floorHeight = 100 / this.floor; //генерируем высоту этажа после создания страницы
   },
   methods: {
     call(index) {
+      // нажатие кнопки и определение движения в зависимости от того где выше целевой этаж или ниже
       this.targetFloor = index + 1;
       if (this.cabinIndex < this.targetFloor) {
         this.direction = 1;
@@ -55,13 +56,16 @@ export default {
       } else {
         this.direction = 0;
       }
-      this.move();
+      this.move(); // запуск движения кабины
     },
     move() {
       if (this.direction !== 0) {
+        // проверка нужно ли двигаться
         this.movingInterval = setInterval(() => {
-          this.cabinIndex += this.direction;
+          //интервал движения по каждому этажу 1с / 1 этаж
+          this.cabinIndex += this.direction; // изменяем индекс кабины в зависимости от движения
           if (this.cabinIndex === this.targetFloor) {
+            //когда доходим до нужного этажа останавливаем интервал и чистим движение
             clearInterval(this.movingInterval);
             this.direction = null;
           }
